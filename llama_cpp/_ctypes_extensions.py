@@ -68,6 +68,16 @@ def load_shared_library(lib_base_name: str, base_path: pathlib.Path):
             except Exception as e:
                 raise RuntimeError(f"Failed to load shared library '{lib_path}': {e}")
 
+    if sys.platform == "win32":
+        raise FileNotFoundError(
+            f"Shared library '{lib_base_name}.dll' not found in '{base_path}'.\n"
+            "This usually means the installed wheel was built without C++ compilation "
+            "(a 'py3-none' wheel that omits the DLL).\n"
+            "Fix it by reinstalling from the prebuilt index:\n\n"
+            "    pip install llama-cpp-python \\\n"
+            "        --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu \\\n"
+            "        --force-reinstall\n"
+        )
     raise FileNotFoundError(
         f"Shared library with base name '{lib_base_name}' not found"
     )

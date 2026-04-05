@@ -28,16 +28,30 @@ import os
 import sys
 import argparse
 
-import uvicorn
+try:
+    import uvicorn
 
-from llama_cpp.server.app import create_app
-from llama_cpp.server.settings import (
-    Settings,
-    ServerSettings,
-    ModelSettings,
-    ConfigFileSettings,
-)
-from llama_cpp.server.cli import add_args_from_model, parse_model_from_args
+    from llama_cpp.server.app import create_app
+    from llama_cpp.server.settings import (
+        Settings,
+        ServerSettings,
+        ModelSettings,
+        ConfigFileSettings,
+    )
+    from llama_cpp.server.cli import add_args_from_model, parse_model_from_args
+except ImportError as e:
+    print(
+        f"Error: {e}\n\n"
+        "The server dependencies are not installed.\n"
+        "Install them with:\n\n"
+        '    pip install "llama-cpp-python[server]"\n\n'
+        "If you installed a prebuilt wheel and still see this error, run:\n\n"
+        '    pip install "llama-cpp-python[server]" \\\n'
+        "        --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu \\\n"
+        "        --force-reinstall\n",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
 
 def main():
